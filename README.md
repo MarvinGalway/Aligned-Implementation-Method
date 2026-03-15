@@ -6,9 +6,24 @@
 
 ## Prerequisites
 
-AIM requires a `REQUIREMENTS.md` file at the project root before any session begins. This is not optional — it is the foundation the entire methodology builds on.
+AIM requires a requirements file before any session begins. This is not optional — it is the foundation the entire methodology builds on.
 
-A strong `REQUIREMENTS.md` must cover:
+**The agent locates it automatically using this sequence:**
+
+1. **Frontmatter tag (priority)** — any markdown file in the project root or `docs/` declaring:
+   ```
+   ---
+   aim-role: requirements
+   ---
+   ```
+   This is the recommended approach. It works regardless of filename or location.
+
+2. **Convention fallback** — if no tagged file is found, the agent looks for:
+   `REQUIREMENTS.md` → `SPECS.md` → `PRD.md` → `RFC.md` → `docs/requirements*.md`
+
+3. **Escalation** — if neither step finds a file, the agent stops and asks.
+
+**A strong requirements file must cover:**
 
 - **Problem statement** — what is being built and what does success look like
 - **Technology stack** — language, framework, database, transport layer, test runner, and any key libraries
@@ -17,7 +32,7 @@ A strong `REQUIREMENTS.md` must cover:
 - **Integrations** — external services, APIs, auth providers
 - **Edge cases and boundaries** — what inputs are invalid, what failure states must be handled
 
-If the file is missing or too vague, the agent will stop and ask for it before proceeding. A weak requirements file produces weak Acceptance Criteria, which breaks every downstream step.
+A weak requirements file produces weak Acceptance Criteria, which breaks every downstream step.
 
 ---
 
@@ -46,7 +61,7 @@ Every phase ends with a validation step that maps the implementation back to the
 
 | File | Purpose |
 |---|---|
-| `REQUIREMENTS.md` | **You write this.** The project requirements, stack definition, and constraints. AIM cannot start without it. |
+| `your-requirements-file.md` | **You write this.** Any name works — tag it with `aim-role: requirements` in the frontmatter and the agent will find it automatically. |
 | `AGENT.md` | The runtime protocol. Place at project root and load as your agent's system prompt or rules file. |
 | `INIT.md` | One-shot bootstrap command. Run once at project kickoff to generate the `.ai/` planning directory. |
 

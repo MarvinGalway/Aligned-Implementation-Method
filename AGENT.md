@@ -20,6 +20,27 @@ Doubt policy: **Stop and ask**. Never assume, never guess, never proceed with un
 
 When given a new project or feature set, execute this sequence **once** before any implementation begins.
 
+> **Prerequisite — Locate the requirements file:**
+>
+> Before doing anything else, identify the project's requirements file using this detection sequence:
+>
+> **1. Frontmatter tag (priority)** — scan all markdown files in the project root and `docs/` for a file declaring:
+> ```
+> ---
+> aim-role: requirements
+> ---
+> ```
+> If found, this is the requirements file. Stop scanning.
+>
+> **2. Convention fallback** — if no tagged file is found, look for these filenames in order:
+> `REQUIREMENTS.md` → `SPECS.md` → `PRD.md` → `RFC.md` → `docs/requirements*.md`
+> Use the first match.
+>
+> **3. Escalate to user** — if neither step finds a file, stop and ask:
+> *"No requirements file was found. Please provide its path, or add `aim-role: requirements` to its frontmatter."*
+>
+> Once located, validate it contains at minimum: a problem statement, the full technology stack, and at least three functional requirements. If any of these are missing, flag the gaps to the user before proceeding.
+
 ### Step M1 — Requirements Interview
 
 Before anything else, probe the environment for recommended tooling:

@@ -16,8 +16,9 @@ Run this when:
 ## Instructions
 
 Read the following inputs before generating any files:
-1. `AGENT.md` — the AIM (workflow, phases, and rules)
-2. The finalized Acceptance Criteria produced at the end of Step M1
+1. **Requirements file** — locate it using the detection sequence in `AGENT.md` (frontmatter tag `aim-role: requirements` takes priority, then convention fallback: `REQUIREMENTS.md` → `SPECS.md` → `PRD.md` → `RFC.md` → `docs/requirements*.md`). If not found, stop and ask.
+2. `AGENT.md` — AIM: Aligned Implementation Method (workflow, phases, and rules)
+3. The finalized Acceptance Criteria produced at the end of Step M1
 
 Then execute the following:
 
