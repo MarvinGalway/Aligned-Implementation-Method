@@ -154,7 +154,7 @@ _Empty if all criteria are met. Otherwise, structured per the format in .aim/PRO
 - **After each step completes:** check off the corresponding item in `.ai/TODO.md` and in `.ai/phase-N.md`.
 - **After Step 0 (Sentinel):** record the Sentinel Baseline in `.ai/phase-N.md`.
 - **After Step 5 (Validation):** populate the Coverage Evidence and Metadata Validation sections in `.ai/phase-N.md`. If gaps exist, append a Gap Report.
-- **After a phase completes:** update the `## Status` field in `.ai/phase-N.md` to `[x] Complete`.
+- **After a phase completes:** update the `## Status` field in `.ai/phase-N.md` to `[x] Complete`, then emit the post-commit KG refresh commands as a copy/paste block for the user (only the commands for KG tools recorded as available in `.ai/TODO.md`). Do not run those commands from the agent — re-indexing happens after the user commits the phase.
 - **If a gap report is produced in Step 5:** append it under `### Gap Report` in `.ai/phase-N.md`.
 - **Never delete or rewrite past entries.** Append corrections or resolutions below the original entry.
 - **The `.ai/TODO.md` is the single source of progress truth.** It must always reflect the current real state of the project.

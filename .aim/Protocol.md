@@ -195,17 +195,25 @@ Capture and read interceptor logs from the output before proceeding.
 - After completing this step: check off the task in `.ai/TODO.md`.
 
 ### Step 5 — Phase Validation
-1. **Refresh the KG index** if a KG tool is available — the graph must reflect HEAD before validation runs.
-2. **Validate Metadata identifiers.** For every Metadata block in this phase's artifacts, confirm all identifiers resolve per the validation rules in the Metadata Block section above. Unknown identifiers fail validation and block phase completion.
-3. Execute the full test suite via shell. Capture the complete stdout/stderr output.
-4. Map results against this phase's Acceptance Criteria using the KG (or manual review if no KG is available):
-   - For each AC covered by this phase: query the graph for implementation functions and proving tests. Record the evidence (function paths, test paths, query used) in `.ai/phase-N.md` under "Coverage Evidence".
+1. **Validate Metadata identifiers.** For every Metadata block in this phase's artifacts, confirm all identifiers resolve per the validation rules in the Metadata Block section above. Unknown identifiers fail validation and block phase completion.
+2. Execute the full test suite via shell. Capture the complete stdout/stderr output.
+3. Map results against this phase's Acceptance Criteria. Use the KG as a baseline if it is available (it will reflect the previous commit, not the in-flight changes — treat its results as a starting point and reconcile with the current diff). If no KG is available, rely on test output, `grep`, and manual review.
+   - For each AC covered by this phase: identify the implementation functions and proving tests. Record the evidence (function paths, test paths, detection method) in `.ai/phase-N.md` under "Coverage Evidence".
    - Are there untested edge cases in the AC that the implementation silently ignores?
-5. **If all criteria are met:**
+4. **If all criteria are met:**
    - Write the validation result in `.ai/phase-N.md`, including the Coverage Evidence section.
    - Mark the phase complete in `.ai/phase-N.md`.
    - Check off all remaining tasks for this phase in `.ai/TODO.md`.
-6. **If criteria are not met:** output a structured gap report:
+   - **Do not auto-refresh the knowledge graphs.** The graphs are re-indexed after the user commits this phase, not during agent execution. Surface the refresh commands as a copy/paste block for the user. Include only the lines corresponding to KG tools recorded as `available` in `.ai/TODO.md`:
+
+     ```bash
+     # Run after committing this phase — keeps the knowledge graph aligned with HEAD.
+     gitnexus analyze       # only if gitnexus is available
+     graphify --update      # only if graphify is available
+     ```
+
+     If neither tool is available, omit this block entirely.
+5. **If criteria are not met:** output a structured gap report:
 
 ```
 ## Gap Report — Phase N
@@ -334,7 +342,7 @@ graphify --mcp              # start MCP stdio server
 | 0 — Sentinel | Query the graph for pre-existing artifacts touched by this phase's ACs | — |
 | 1 — Blueprint | Verify proposed contracts don't conflict with existing graph nodes | — |
 | 3 — Green Loop | After implementation, run `gitnexus impact` to check blast radius before refactoring | — |
-| 5 — Validation | Query coverage per AC; produce Coverage Evidence; detect gaps via Cypher | Cross-check rationale extraction against design docs; surface design-intent mismatches |
+| 5 — Validation | Query coverage per AC against the last-indexed snapshot; produce Coverage Evidence; detect gaps via Cypher. KG re-indexing (`gitnexus analyze`) is **not** run by the agent — it is emitted as a copy/paste command for the user to run after committing the phase. | Cross-check rationale extraction against design docs; surface design-intent mismatches. Re-extraction (`graphify --update`) is emitted as a copy/paste command, not auto-run. |
 
 **Reconciliation rule.** Both tools index the same Metadata blocks, so they share the literal anchor identifiers (`AC-07`, `Phase_2_RefreshToken`, `REQ-03`). When both tools are installed, Step 5 Validation queries both for each AC and records any divergence — a function appearing in one graph's coverage and not the other is a Gap Report finding, not a noise item.
 
